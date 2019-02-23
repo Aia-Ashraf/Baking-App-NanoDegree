@@ -42,7 +42,7 @@ public class ItemDetailActivity extends AppCompatActivity {
 
     private int size, id;
     private String idd;
-
+private String a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -73,9 +73,9 @@ public class VideosActivity extends AppCompatActivity implements ExoPlayer.Event
         else id = mid;
         bakeId = bundle.getInt("id", 666);
         Log.i("xzceeqw", flag + " " + id + " <<<");
-        uri = ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id).getVideoURL();
-//uri="https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd97a_1-mix-marscapone-nutella-creampie/1-mix-marscapone-nutella-creampie.mp4";
-        desc.setText(ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id).getDescription() + " ");
+//        uri = ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id).getVideoURL();
+uri="https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd97a_1-mix-marscapone-nutella-creampie/1-mix-marscapone-nutella-creampie.mp4";
+//        desc.setText(ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id).getDescription() + " ");
         initializeMediaSession();
         initializePlayer(Uri.parse(uri));
 
