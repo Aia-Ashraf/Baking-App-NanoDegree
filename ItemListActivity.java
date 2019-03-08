@@ -1,5 +1,6 @@
 package com.example.aiaashraf.bakingapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -7,8 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+
 import com.example.aiaashraf.bakingapplication.dummy.RecipesPojoModel;
+import com.example.aiaashraf.bakingapplication.dummy.Step;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +42,11 @@ public class ItemListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecipesAdapter recipesAdapter;
     public static List<RecipesPojoModel> recipesPojoModelList = new ArrayList<>();
+    private StepsAdapter stepsAdapter;
+
     public static boolean twoPane;
+
+    public static List<Step> stepList = new ArrayList<>();
 
 
     /**
@@ -50,21 +59,12 @@ public class ItemListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
+        isTablet();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-//        checkTabletOrMobile();
-
-
-        if (findViewById(R.id.item_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
         assert recyclerView != null;
 
         recipesPojoModelList = new ArrayList<>();
@@ -100,7 +100,6 @@ public class ItemListActivity extends AppCompatActivity {
 
                             Log.d("responseName", "aaaaaaaaaaa" + recipesPojoModelList);
                         } else {
-//                            Toast.makeText(MainActivity.this, "error", Toast.LENGTH_LONG);
                             Log.d("responseName", "error");
                         }
                     } catch (Exception e) {
@@ -112,28 +111,32 @@ public class ItemListActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ArrayList<RecipesPojoModel>> call, Throwable t) {
                     Log.d("responseName", "erroronFailure" + t);
-                    }
+                }
             });
         }
     }
-    private void checkTabletOrMobile() {
 
-        if (findViewById(R.id.tabMode) != null) {
 
-            Bundle args = new Bundle();
-            args.putInt("id", 1);
-            args.putInt("listSize", 1);
-            ItemDetailFragment bakeFragment = new ItemDetailFragment();
-            bakeFragment.setArguments(args);
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().add(R.id.item_detail_container, bakeFragment).commit();
-            twoPane = true;
-            return;
-        } else twoPane = false;
-    }
 
-    void check(){
-        recyclerView = findViewById(R.id.item_list);
+    public void isTablet() {
 
+        // Compute screen size
+        DisplayMetrics dm = this.getResources().getDisplayMetrics();
+        float screenWidth = dm.widthPixels / dm.xdpi;
+        float screenHeight = dm.heightPixels / dm.ydpi;
+        double size = Math.sqrt(Math.pow(screenWidth, 2) +
+                Math.pow(screenHeight, 2));
+        // Tablet devices have a screen size greater than 6 inches
+        if (size >= 5.4) {
+            if(dm.heightPixels>=1953) {
+                Log.e("aia", "Tablet");
+                mTwoPane = true;
+            }
+            mTwoPane = false;
+
+        } else {
+            Log.e("aia", "Mobile");
+            mTwoPane = false;
+        }
     }
 }

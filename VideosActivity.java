@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aiaashraf.bakingapplication.dummy.RecipesPojoModel;
+import com.example.aiaashraf.bakingapplication.dummy.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -37,10 +39,10 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 
-public class VideosActivity extends AppCompatActivity implements ExoPlayer.EventListener{
+public class VideosActivity extends AppCompatActivity implements ExoPlayer.EventListener {
 
     private int id, bakeId;
-    private String uri;
+    //    private String uri;
     private SimpleExoPlayer exoPlayer;
     private static MediaSessionCompat mediaSession;
     private NotificationManager notificationManager;
@@ -52,6 +54,7 @@ public class VideosActivity extends AppCompatActivity implements ExoPlayer.Event
     Button nextButton;
 
     Button prevButton;
+    String uri, decription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +63,13 @@ public class VideosActivity extends AppCompatActivity implements ExoPlayer.Event
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        nextButton = (Button) findViewById(R.id.next);
+//        Step object = getIntent().getParcelableExtra("stepsParcelable");
+        final Intent object = getIntent();
+        decription = object.getStringExtra("step_desc");
+        uri = object.getStringExtra("step_uri");
 
-        prevButton = (Button) findViewById(R.id.prev);
+//        nextButton = (Button) findViewById(R.id.next);
+//        prevButton = (Button) findViewById(R.id.prev);
 
         desc = (TextView) findViewById(R.id.desc);
         playerView = (SimpleExoPlayerView) findViewById(R.id.media_player);
@@ -73,45 +80,44 @@ public class VideosActivity extends AppCompatActivity implements ExoPlayer.Event
         else id = mid;
         bakeId = bundle.getInt("id", 666);
         Log.i("xzceeqw", flag + " " + id + " <<<");
-//        uri = ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id).getVideoURL();
-uri="https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd97a_1-mix-marscapone-nutella-creampie/1-mix-marscapone-nutella-creampie.mp4";
-//        desc.setText(ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id).getDescription() + " ");
+
+        desc.setText(decription);
         initializeMediaSession();
         initializePlayer(Uri.parse(uri));
 
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        nextButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                flag = true;
+//                if (id + 1 < ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().size()) {
+//                    desc.setText(ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id + 1).getDescription() + " ");
+//                    releasePlayer();
+//                    String nextUri = ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id + 1).getVideoURL();
+//                    initializePlayer(Uri.parse(nextUri));
+//                    id = id + 1;
+//                    mid = id;
+//                } else
+//                    Toast.makeText(VideosActivity.this, "You Have Just Finished !", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
-                flag = true;
-                if (id + 1 < ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().size()) {
-                    desc.setText(ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id + 1).getDescription() + " ");
-                    releasePlayer();
-                    String nextUri = ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id + 1).getVideoURL();
-                    initializePlayer(Uri.parse(nextUri));
-                    id = id + 1;
-                    mid = id;
-                } else
-                    Toast.makeText(VideosActivity.this, "You Have Just Finished !", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        prevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                flag = true;
-                if (id > 0) {
-                    desc.setText(ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id - 1).getDescription() + " ");
-                    releasePlayer();
-                    String nextUri =ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id - 1).getVideoURL();
-                    initializePlayer(Uri.parse(nextUri));
-                    id = id - 1;
-                    mid = id;
-                } else
-                    Toast.makeText(VideosActivity.this, "You Have Just Finished !", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        prevButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                flag = true;
+//                if (id > 0) {
+//                    desc.setText(ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id - 1).getDescription() + " ");
+//                    releasePlayer();
+//                    String nextUri =ItemListActivity.recipesPojoModelList.get(bakeId).getSteps().get(id - 1).getVideoURL();
+//                    initializePlayer(Uri.parse(nextUri));
+//                    id = id - 1;
+//                    mid = id;
+//                } else
+//                    Toast.makeText(VideosActivity.this, "You Have Just Finished !", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override
@@ -159,11 +165,13 @@ uri="https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd97a_1-mix-mars
         super.onDestroy();
         releasePlayer();
     }
+
     private void releasePlayer() {
 
         exoPlayer.stop();
         exoPlayer.release();
     }
+
     private void initializeMediaSession() {
 
         mediaSession = new MediaSessionCompat(this, "aaa");
@@ -184,6 +192,7 @@ uri="https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd97a_1-mix-mars
         mediaSession.setActive(true);
 
     }
+
     public static class MediaReceiver extends BroadcastReceiver {
 
         public MediaReceiver() {
@@ -211,6 +220,7 @@ uri="https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd97a_1-mix-mars
             exoPlayer.seekTo(0);
         }
     }
+
     private void initializePlayer(Uri uri) {
 
         TrackSelector trackSelector = new DefaultTrackSelector();
@@ -228,7 +238,6 @@ uri="https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd97a_1-mix-mars
         exoPlayer.prepare(mediaSource);
         exoPlayer.setPlayWhenReady(true);
     }
-
 
 
     @Override

@@ -14,11 +14,14 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
 
     private List<Ingredient> ingredientList;
     Context context;
+    private ItemListActivity mParentActivity;
+    private final boolean mTwoPane;
 
-
-    public IngredientAdapter(Context context, List<Ingredient> ingredients) {
+    public IngredientAdapter(Context context, List<Ingredient> ingredients ,ItemListActivity parent, boolean twoPane) {
         this.context = context;
         this.ingredientList = ingredients;
+        mParentActivity = parent;
+        mTwoPane = twoPane;
     }
 
     @NonNull

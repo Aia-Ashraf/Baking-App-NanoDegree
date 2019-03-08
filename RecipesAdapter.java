@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +19,15 @@ import com.example.aiaashraf.bakingapplication.dummy.RecipesPojoModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.GONE;
+
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesViewHolder> {
 
     private List<RecipesPojoModel> recipesPojoModelList;
     private List<Ingredient> ingredientList;
     Context context;
-    private final ItemListActivity mParentActivity;
+    private ItemListActivity mParentActivity;
     private final boolean mTwoPane;
     private IngredientAdapter ingredientAdapter;
 
@@ -49,7 +53,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipesAdapter.RecipesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecipesAdapter.RecipesViewHolder holder, final int position) {
 
 
         final RecipesPojoModel recipesPojoModelPosition = recipesPojoModelList.get(position);
@@ -73,14 +77,30 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                     arguments.putString(ItemDetailFragment.ARG_ITEM_Main_measure, meas);
                     arguments.putString(ItemDetailFragment.ARG_ITEM_Main_ingredient, ind);
                     arguments.putString(ItemDetailFragment.ARG_ITEM_Main_indSize, listSize+"");
-                    arguments.putString("myDataKey", String.valueOf(recipesPojoModelPosition));
+                    arguments.putParcelable(ItemDetailFragment.ARG_ITEM_pars, recipesPojoModelList.get(position));
+                    arguments.putParcelable(ListFragment.ARG_ITEM_pars, recipesPojoModelList.get(position));
 
-                    ItemDetailFragment fragment = new ItemDetailFragment();
-                    fragment.setArguments(arguments);
+                    ItemListActivity  mParentActivity =(ItemListActivity)context;
+
+                        Fragment fragment = new ItemDetailFragment();
+                        fragment.setArguments(arguments);
+                        mParentActivity.getSupportFragmentManager().beginTransaction()
+                          .replace(R.id.item_detail_container, fragment)
+                                .commit();
+
+//                        mParentActivity.check();
+
+                    Fragment fragment2 = new ListFragment();
+                    fragment2.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.item_detail_container, fragment)
+                            .replace(R.id.item_detail_container2, fragment2)
+
                             .commit();
-                } else {
+
+
+
+                      } else {
+
                     RecipesPojoModel recipesPojoModelparc = new RecipesPojoModel();
                     Context context = v.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);

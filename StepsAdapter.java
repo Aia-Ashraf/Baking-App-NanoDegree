@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.aiaashraf.bakingapplication.dummy.Ingredient;
 import com.example.aiaashraf.bakingapplication.dummy.Step;
 
 import java.util.List;
@@ -21,11 +20,15 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
 
     private List<Step> steps;
     Context context;
+    private ItemListActivity mParentActivity;
+    private final boolean mTwoPane;
 
 
-    public StepsAdapter(Context context, List<Step> steps) {
+    public StepsAdapter(Context context, List<Step> steps , ItemListActivity parent, boolean twoPane) {
         this.context = context;
         this.steps = steps;
+        mParentActivity = parent;
+        mTwoPane = twoPane;
     }
 
     @NonNull
@@ -43,6 +46,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     public void onBindViewHolder(@NonNull StepsAdapter.StepsViewHolder holder, int position) {
 
         final Step stepPosition = steps.get(position);
+
         holder.stepText.setText(stepPosition.getDescription());
         holder.stepText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +64,8 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
                 } else {
                     Intent intent = new Intent(context,VideosActivity.class);
                     intent.putExtra("step_id", stepPosition.getId());
+                    intent.putExtra("step_desc",stepPosition.getDescription());
+                    intent.putExtra("step_uri",stepPosition.getVideoURL());
                     context.startActivity(intent);
                 }
             }
